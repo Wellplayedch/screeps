@@ -19,8 +19,15 @@ run: function(creep)   {
     }
     //If creep working, transfer energy to spawn, if not at spawn move to spawn.
     if (creep.memory.working == true) {
-        if (creep.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(Game.spawns.Spawn1);
+        //finds the next structures that can take energy that are mine (not including walls / roads)
+        var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+            filter: (s) => s.energy < s.energyCapacity
+        });
+        if (structure != undefined) {
+            if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(structure);
+        }
+
         }
     }
     else {
